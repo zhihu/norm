@@ -1,6 +1,6 @@
 # norm
 
-An orm library support nGQL for Golang.
+An ORM library support nGQL for Golang.
 
 [![go report card](https://goreportcard.com/badge/github.com/zhihu/norm "go report card")](https://goreportcard.com/report/github.com/zhihu/norm)
 [![Go](https://github.com/zhihu/norm/actions/workflows/go.yml/badge.svg)](https://github.com/zhihu/norm/actions/workflows/go.yml)
@@ -9,13 +9,14 @@ An orm library support nGQL for Golang.
 
 ## Overview
 
-* Build insert nGQL by struct/map (Support vertex, edge).
-* Parse nebula execute result to struct/map.
-* Easy use.
-* Easy mock for unit test.
+* Build insert nGQL by struct / map (Support vertex, edge).
+* Parse Nebula execute result to struct / map.
+* Easy to use.
+* Easy mock for Unit Testing.
 
-**roadmap**
-1. Session pool. For detail please see [dialector](/docs/dialector.adoc)
+**Roadmap**
+
+1. Session pool. For details, please see [dialector](/docs/dialector.adoc)
     * Plan: before 2021/07/20
 2. Support more types in insert/execute function.
     * Types: time.Time
@@ -23,20 +24,28 @@ An orm library support nGQL for Golang.
 4. Chainable api. For detail please see [chainable api](/docs/chainable_api.adoc)
 
 **Maybe Support**
-- [ ] Statistic hooks. Insert/Query count and latency.
+
+- [ ] Statistic Hooks. Insert/Query count and latency.
 - [ ] Fix fields Order when build insert nGQL. (now norm use map store keys, and in go range map is out-of-order.)
 
 **Need improve**
+
 - [ ] Betchmark.
-- [ ] Unit tests.
+- [ ] Unit Testing.
 - [ ] Documents.
 
 ## Getting Started
-install: `go get github.com/zhihu/norm`
+
+Install:
+
+```
+go get github.com/zhihu/norm
+```
 
 use example: please go [use example](/examples/toddle/main.go)
 
 ## Contributing guidelines
+
 * [code of conduct](/CODE_OF_CONDUCT.md)
 * [行为规范 中文版](/CODE_OF_CONDUCT_CN.md)
 
