@@ -3,9 +3,9 @@
 An orm library support nsql for Golang.
 
 [![go report card](https://goreportcard.com/badge/github.com/zhihu/norm "go report card")](https://goreportcard.com/report/github.com/zhihu/norm)
-[![test status](https://github.com/zhihu/norm/workflows/tests/badge.svg?branch=master "test status")](https://github.com/zhihu/norm/actions)
+[![Go](https://github.com/zhihu/norm/actions/workflows/go.yml/badge.svg)](https://github.com/zhihu/norm/actions/workflows/go.yml)
 [![MIT license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
-[![Go.Dev reference](https://img.shields.io/badge/go.dev-reference-blue?logo=go&logoColor=white)](https://pkg.go.dev/norm.io/norm?tab=doc)
+[![Go.Dev reference](https://img.shields.io/badge/go.dev-reference-blue?logo=go&logoColor=white)](https://pkg.go.dev/github.com/zhihu/norm)
 
 ## Overview
 
