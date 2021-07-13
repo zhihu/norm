@@ -1,0 +1,7 @@
+= 模块介绍
+. norm.go: 通过 dialector 屏蔽与数据库真正的交互, 专注于 orm.
+. dialector.go: 真正与 nebula 连接的地方
+. chainable_api.go: 图数据库 API 链式调用.
+. finished_api.go: 链式调用最后返回数据, 如 Insert, Return.
+
+db 分两个, 一个 db.parent==nil, 表示初始db. 一个 db.parent!=nil, 表示一次查询中使用的 db.

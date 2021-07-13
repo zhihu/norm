@@ -1,0 +1,68 @@
+= dialector
+
+dialector 表示一个可执行的数据库连接, 用于执行 norm 生成的 nsql.
+
+== dialector 名称的由来
+dialect 指方言, 读音 ['daɪə.lekt], 取自 link:https://github.com/go-gorm/gorm/blob/v1.21.11/interfaces.go#L12[gorm dialector]
+
+gorm 的思想是, 只做 object 到 sql 的转换, 然后通过传入的 db_connection 执行 sql. 所以 gorm 天然支持所有兼容 sql 的数据库, 只要传入不同的 db_connection 即可.
+
+dialector 便是 db_connection 的名称, 表示各个数据库的方言.
+
+norm 是参考 gorm 编写的, norm 用于将 object 翻译为 nsql, 所以命名上也参考了 gorm, 支持所有兼容 nsql 的数据库.
+
+== nebula dialector 实现
+date: 2021-07-03
+
+现阶段的 dialector 主要是对 nebula 的封装, 使其更适合偏传统业务的使用, 让 nebula 像 mysql 一样为日常业务赋能.
+
+=== nebula connection 介绍
+nebula 执行 sql 的示例如下, 每次执行 sql 前, 都需要获取 session 并指定 space.
+
+[source,go]
+----
+pool, _ := nebula.NewConnectionPool(xx)
+session, _ := pool.GetSession(username, password)
+defer session.Release()
+session.Execute("use space_xx")
+session.Execute(sql)
+----
+
+我们知道, 在使用时一般将 space 是为 mysql 的 db, 而在业务中, 如果用到两个数据库, 我们一般是创建两个 db 实例而非在一个实例里不断的切换 db. norm 对于 nebula connection 的更改也多是在此方面.
+
+翻阅源码可知, nebula.pool 负责创建了于数据库的连接, session 负责校验用户名密码, 然后从 pool 中取出一个连接创建 session. 如果复用 session, 需要明确的一个问题是, 之前执行的 nsql 会不会对之后的 nsql 产生影响.
+
+根据经验而言, 答案是不会 (除了 `use space` 语句). 在 nebula 中, 即使是变量, 也需要在同一个 nsql 中执行才起作用, 其他语句更无可能了. So 可以安心使用.
+
+=== nebula dialector
+先列一下我们的需求和需要解决的问题.
+
+. 在不显示切换 space 的情况下, 我们希望一直使用的都是同一个 space, 而不是每次执行前指定 space.
+. 在使用官方连接池时, 如果连接数满了, 则后续的 nsql 会因为无法创建新连接报错. 这方面我们希望是如果没有超时, 就等待可用连接.
+    .. 这个官方有 TODO, 但是还没有做, 参考: link:https://github.com/vesoft-inc/nebula-go/blob/v2.0.0-ga/connection_pool.go#L142[todo]
+. 我们希望 dialector 是易于 mock 的, 这样可以方便业务方单元测试. 这需要从两方面改善, 一是 dialector 设计为 interface, 二是参数/返回值可以在包外定义, 满足这两个条件则业务方就可以自行 mock 了.
+
+基于这些需求和问题, 我想重新封装 nebula-go 官方库, 编写 nebula dialector. 基于目前的需求, 有如下原则
+
+1. 创建时指定 space, 每次执行都是在此 space 下执行.
+2. 不允许切换 space, 如果需要在多个 space 下执行, 则创建多个 norm.DB.
+    .. 不支持切换 space, 是为了保证并发安全. 因为我们默认是在创建时的 space 下执行的, 如果此时切换了 space, 原先正在执行的 sql 都会在新 space 下执行.
+
+设计一个高性能, 支持 connect_size/idleTime 等功能的 session_pool, 相对较为复杂 (尝试了下 管道的方案, 没有特别好的思路), 先搁置做其他的事情吧. 
+
+后续可以考虑能否从底层修改 `先指定 space, 再执行 sql` 的产品逻辑, 然后 norm 就不需要单独做这个了.
+
+==== 如何设计 pool
+可以参考 sync.Pool, 但是不可使用. 因为其设计理念不太符合数据库这种需要长久连接的.
+
+可以参考源码, 也可参考文章: https://juejin.cn/post/6844903903046320136
+
+.笔记
+. 考虑 GMP 实现, 对每个 pool 设置一个 localpool, 每个 P 只能获取自己 localpool 下的数据, 进而可以无锁获取. 添加整体的 shardpool, 用于各 P 并发获取(有锁). (顺便说一句, 内存分配是这么搞的, GMP 中 G 队列也是这样的思维)
+. 缓存行填充. 缓存系统加锁是对整个缓存行加锁的, 如果一次取出的数据不足一行, 则对该结构体加锁后, 获取同一行的其他数据也会阻塞. Pool 对此也做了优化. (印象中记得 Java 也有这个逻辑)
+. sync.Pool 会定期清理, 所以不能用来缓存连接
+
+=== Others
+关于 nebula-go, 还有个 bug 需要注意, 对于非 root 用户, `use space` 和真正执行的 nsql 需要拆分称两条语句执行. 如对于非 root 用户, `use test;insert vertex ...` 需要拆分为 `exec("use space"); exec("insert vertex ...")`
+
+另, nebula.pool.IdleTime 虽然定义了, 但是并没有使用 (2021-07-03)
