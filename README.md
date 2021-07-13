@@ -1,6 +1,6 @@
 # norm
 
-An orm library support nsql for Golang.
+An orm library support nGQL for Golang.
 
 [![go report card](https://goreportcard.com/badge/github.com/zhihu/norm "go report card")](https://goreportcard.com/report/github.com/zhihu/norm)
 [![Go](https://github.com/zhihu/norm/actions/workflows/go.yml/badge.svg)](https://github.com/zhihu/norm/actions/workflows/go.yml)
