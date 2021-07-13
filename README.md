@@ -9,7 +9,7 @@ An orm library support nGQL for Golang.
 
 ## Overview
 
-* Build insert nsql by struct/map (Support vertex, edge).
+* Build insert nGQL by struct/map (Support vertex, edge).
 * Parse nebula execute result to struct/map.
 * Easy use.
 * Easy mock for unit test.
@@ -24,7 +24,7 @@ An orm library support nGQL for Golang.
 
 **Maybe Support**
 - [ ] Statistic hooks. Insert/Query count and latency.
-- [ ] Fix fields Order when build insert nsql. (now norm use map store keys, and in go range map is out-of-order.)
+- [ ] Fix fields Order when build insert nGQL. (now norm use map store keys, and in go range map is out-of-order.)
 
 **Need improve**
 - [ ] Betchmark.
