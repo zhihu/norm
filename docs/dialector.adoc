@@ -48,7 +48,8 @@ session.Execute(sql)
 2. 不允许切换 space, 如果需要在多个 space 下执行, 则创建多个 norm.DB.
     .. 不支持切换 space, 是为了保证并发安全. 因为我们默认是在创建时的 space 下执行的, 如果此时切换了 space, 原先正在执行的 sql 都会在新 space 下执行.
 
-设计一个高性能, 支持 connect_size/idleTime 等功能的 session_pool, 相对较为复杂 (尝试了下 管道的方案, 没有特别好的思路), 先搁置做其他的事情吧. 
+设计一个高性能, 支持 connect_size 等功能的 session_pool, 相对较为复杂 (尝试了下 管道的方案, 没有特别好的思路), 先搁置做其他的事情吧. 
+(和官方沟通了下, 可以在官方库的基础上改造, 或者官方完成指定 space 的功能, 这一部分尽量以官方为准)
 
 后续可以考虑能否从底层修改 `先指定 space, 再执行 sql` 的产品逻辑, 然后 norm 就不需要单独做这个了.
 
@@ -62,7 +63,3 @@ session.Execute(sql)
 . 缓存行填充. 缓存系统加锁是对整个缓存行加锁的, 如果一次取出的数据不足一行, 则对该结构体加锁后, 获取同一行的其他数据也会阻塞. Pool 对此也做了优化. (印象中记得 Java 也有这个逻辑)
 . sync.Pool 会定期清理, 所以不能用来缓存连接
 
-=== Others
-关于 nebula-go, 还有个 bug 需要注意, 对于非 root 用户, `use space` 和真正执行的 nsql 需要拆分称两条语句执行. 如对于非 root 用户, `use test;insert vertex ...` 需要拆分为 `exec("use space"); exec("insert vertex ...")`
-
-另, nebula.pool.IdleTime 虽然定义了, 但是并没有使用 (2021-07-03)
