@@ -2,8 +2,8 @@
 
 _doing_
 
-What's chanable api?
+What's chainable api?
 
-For example, in norm we write `From(&User{vid:10, created: 100}).Over(Follow{}).Return(sql, &user)`, and it will be translate to `go from 10 over follow where $^.created == 100 yield {{sql}}`.
+For example, in norm if we write `From(&User{vid:10, created: 100}).Over(Follow{}).Return(sql, &user)`, it will be translated to `go from 10 over follow where $^.created == 100 yield {{ngql}}`.
 
 Or `match(..)` for instead (haven't decided).
