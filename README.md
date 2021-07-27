@@ -30,7 +30,7 @@ An ORM library support nGQL for Golang.
 
 **Need improve**
 
-- [ ] Betchmark.
+- [ ] Benchmark.
 - [ ] Unit Testing.
 - [ ] Documents.
 
