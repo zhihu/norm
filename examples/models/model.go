@@ -1,4 +1,4 @@
-package examples
+package models
 
 import (
 	"fmt"
