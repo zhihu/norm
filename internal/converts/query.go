@@ -31,11 +31,37 @@ func UnmarshalResultSet(resultSet *dialectors.ResultSet, in interface{}) error {
 				return toStruct(val, resultSet)
 			case reflect.Slice:
 				return toStructSlice(val, resultSet)
+			case reflect.Int8, reflect.Int16, reflect.Int, reflect.Int32, reflect.Int64:
+				return toInt(val, resultSet)
+			default:
+				return errors.Errorf("not support type. type is:%v", val.Kind())
 			}
 		default:
 			return errors.New("must be ptr")
 		}
 	}
+}
+
+func toInt(val reflect.Value, resultSet *dialectors.ResultSet) (err error) {
+	if val.Interface() == nil {
+		return NilPointError
+	}
+
+	if resultSet.GetRowSize() < 1 {
+		return RecordNotFoundError
+	}
+
+	defer func() {
+		if r := recover(); r != nil {
+			if e, ok := r.(error); ok {
+				err = e
+			} else {
+				err = errors.New("unknown exec error")
+			}
+		}
+	}()
+	cnt := resultSet.GetRows()[0].GetValues()[0].IVal
+	val.SetInt(*cnt)
 	return nil
 }
 
@@ -77,7 +103,7 @@ func toStructSlice(val reflect.Value, resultSet *dialectors.ResultSet) (err erro
 	if val.Interface() == nil {
 		return NilPointError
 	}
-	if resultSet.GetRowSize() < 1 {
+	if resultSet.GetColSize() < 1 {
 		return
 	}
 
@@ -91,7 +117,7 @@ func toStructSlice(val reflect.Value, resultSet *dialectors.ResultSet) (err erro
 		}
 	}()
 
-	val.Set(reflect.MakeSlice(val.Type(), resultSet.GetRowSize(), resultSet.GetRowSize()))
+	val.Set(reflect.MakeSlice(val.Type(), resultSet.GetColSize(), resultSet.GetColSize()))
 	fieldTagMap := getStructFieldTagMap(val.Index(0).Type())
 	for i, row := range resultSet.GetRows() {
 		// 这里可以优化 GetColNames, 只循环两个共有的 key

@@ -6,7 +6,6 @@ import (
 
 	"github.com/zhihu/norm"
 	"github.com/zhihu/norm/dialectors"
-	"github.com/zhihu/norm/examples/inserts"
 	"github.com/zhihu/norm/examples/querys"
 )
 
@@ -14,13 +13,14 @@ func main() {
 	db := newGdb()
 	// prepare()
 
-	// 插入示例
-	inserts.InsertEdge(db)
-	inserts.InsertVertex(db)
+	// // 插入示例
+	// inserts.InsertEdge(db)
+	// inserts.InsertVertex(db)
 
-	// 查询 示例
-	querys.MatchSingle(db)
-	querys.MatchMulti(db)
+	// // 查询 示例
+	// querys.MatchSingle(db)
+	// querys.MatchMulti(db)
+	querys.Count(db)
 }
 
 func newGdb() *norm.DB {
