@@ -48,7 +48,8 @@ func toInt(val reflect.Value, resultSet *dialectors.ResultSet) (err error) {
 	}
 
 	if resultSet.GetRowSize() < 1 {
-		return RecordNotFoundError
+		val.SetInt(0)
+		return nil
 	}
 
 	defer func() {
