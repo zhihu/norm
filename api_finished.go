@@ -48,9 +48,12 @@ func (db *DB) ReturnRow() (*dialectors.ResultSet, error) {
 
 // Return 返回数据并将结果反序列化到 out 结构体中
 func (db *DB) Return(out interface{}) error {
-	// result, err := db.Row()
-	// if err != nil {
-	// 	return err
-	// }
-	panic("")
+	return db.ExecuteAndParse(db.sql, out)
+}
+
+// Count 计算符合条件的数据数量
+func (db *DB) Count(out interface{}) error {
+	// 不用 match 的 count 原因是部分情况下有 bug
+	// 参考 https://github.com/vesoft-inc/nebula/issues/2934
+	return db.Yield(" '' as id").Group("id").Yield("count(1)").Return(out)
 }

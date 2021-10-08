@@ -114,13 +114,13 @@ func parseStructToMap(val reflect.Value, skipZero bool) (result map[string]inter
 }
 
 var supportKind = map[reflect.Kind]struct{}{
-	reflect.Bool:    struct{}{},
-	reflect.Int:     struct{}{},
-	reflect.Int8:    struct{}{},
-	reflect.Int16:   struct{}{},
-	reflect.Int32:   struct{}{},
-	reflect.Int64:   struct{}{},
-	reflect.Float32: struct{}{},
-	reflect.Float64: struct{}{},
-	reflect.String:  struct{}{},
+	reflect.Bool:    {},
+	reflect.Int:     {},
+	reflect.Int8:    {},
+	reflect.Int16:   {},
+	reflect.Int32:   {},
+	reflect.Int64:   {},
+	reflect.Float32: {},
+	reflect.Float64: {},
+	reflect.String:  {},
 }

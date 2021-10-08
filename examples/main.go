@@ -20,7 +20,9 @@ func main() {
 	// // 查询 示例
 	// querys.MatchSingle(db)
 	// querys.MatchMulti(db)
-	querys.Count(db)
+	// querys.Count(db)
+	querys.Chainable(db)
+	// querys.ChainableCount(db)
 }
 
 func newGdb() *norm.DB {
