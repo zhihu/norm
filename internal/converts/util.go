@@ -37,13 +37,6 @@ func setFieldValue(tag string, field reflect.Value, nValue *nebula_type.Value) e
 	return nil
 }
 
-func withPolicyVid(vid string, policy constants.Policy) string {
-	if policy == constants.PolicyHash {
-		return "hash(" + vid + ")"
-	}
-	return vid
-}
-
 // nValueToInterface 将 nvalue 的值转换类型并返回interface
 func nValueToInterface(p *nebula_type.Value) interface{} {
 	if p.IsSetNVal() {

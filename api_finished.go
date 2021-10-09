@@ -22,7 +22,7 @@ func (db *DB) ExecuteAndParse(sql string, in interface{}) error {
 
 // InsertVertex 解析结构体, 然后插入一个点.
 func (db *DB) InsertVertex(in IVertex) error {
-	sql, err := converts.ConvertToCreateVertexSql(in, in.TagName(), in.GetVid(), in.GetPolicy())
+	sql, err := converts.ConvertToCreateVertexSql(in, in.TagName(), in.GetVidWithPolicy())
 	if err != nil {
 		return err
 	}
@@ -32,8 +32,8 @@ func (db *DB) InsertVertex(in IVertex) error {
 
 // InsertEdge 解析结构体, 然后插入一条边.
 func (db *DB) InsertEdge(in IEdge) error {
-	sql, err := converts.ConvertToCreateEdgeSql(in, in.EdgeName(), in.GetVidSrc(), in.GetVidDst(),
-		in.GetVidSrcPolicy(), in.GetVidDstPolicy())
+	sql, err := converts.ConvertToCreateEdgeSql(in, in.EdgeName(), in.GetVidSrcWithPolicy(),
+		in.GetVidDstWithPolicy())
 	if err != nil {
 		return err
 	}

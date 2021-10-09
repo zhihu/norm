@@ -13,7 +13,7 @@ import (
 func Chainable(db *norm.DB) {
 	cnt := int64(0)
 	queryWhere := fmt.Sprintf("%s.created > %d", voteExample.EdgeName(), time.Now().Unix())
-	err := db.Debug().GoFrom(userExample, 0).Over(voteExample).Bidirect().
+	err := db.Debug().From(userExample).Over(voteExample).Bidirect().
 		Where(queryWhere).Yield("'' as id").
 		Group("id").Yield("count(1)").Return(&cnt)
 	if err != nil {
@@ -24,7 +24,7 @@ func Chainable(db *norm.DB) {
 
 func ChainableCount(db *norm.DB) {
 	cnt := int64(0)
-	err := db.Debug().GoFrom(userExample, 0).Over(voteExample).Bidirect().Count(&cnt)
+	err := db.Debug().From(userExample).Over(voteExample).Bidirect().Count(&cnt)
 	if err != nil {
 		panic(err)
 	}

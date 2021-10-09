@@ -6,7 +6,7 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/zhihu/norm/constants"
+	"github.com/zhihu/norm/internal/utils"
 )
 
 type createEdgeStruct struct {
@@ -19,13 +19,12 @@ var createEdgeTemplate = template.Must(template.New("insert_edge").
 	Parse("insert edge {{.Name}}({{.Keys}}) values {{.Src}} -> {{.Dst}}:({{.Values}})"))
 
 // ConvertToCreateEdgeSql 转换结构体为创建边的 sql
-func ConvertToCreateEdgeSql(in interface{}, edgeName string, src, dst interface{},
-	srcPolicy, dstPolicy constants.Policy) (string, error) {
+func ConvertToCreateEdgeSql(in interface{}, edgeName string, src, dst string) (string, error) {
 	switch values := in.(type) {
 	case map[string]interface{}:
-		return buildCreateEdgeSql(values, edgeName, src, dst, srcPolicy, dstPolicy), nil
+		return buildCreateEdgeSql(values, edgeName, src, dst), nil
 	case *map[string]interface{}:
-		return buildCreateEdgeSql(*values, edgeName, src, dst, srcPolicy, dstPolicy), nil
+		return buildCreateEdgeSql(*values, edgeName, src, dst), nil
 	case []map[string]interface{}:
 		return "", errors.New("batch insert not support now")
 	case *[]map[string]interface{}:
@@ -35,18 +34,17 @@ func ConvertToCreateEdgeSql(in interface{}, edgeName string, src, dst interface{
 		if err != nil {
 			return "", err
 		}
-		return buildCreateEdgeSql(tagMap, edgeName, src, dst, srcPolicy, dstPolicy), nil
+		return buildCreateEdgeSql(tagMap, edgeName, src, dst), nil
 	}
 }
 
-func buildCreateEdgeSql(tagMap map[string]interface{}, edgeName string, src, dst interface{},
-	srcPolicy, dstPolicy constants.Policy) string {
+func buildCreateEdgeSql(tagMap map[string]interface{}, edgeName string, src, dst string) string {
 	keys := make([]string, len(tagMap))
 	values := make([]string, len(tagMap))
 	i := 0
 	for k, v := range tagMap {
 		keys[i] = k
-		values[i] = wrapField(v)
+		values[i] = utils.WrapField(v)
 		i++
 	}
 	keysStr := strings.Join(keys, ",")
@@ -54,8 +52,8 @@ func buildCreateEdgeSql(tagMap map[string]interface{}, edgeName string, src, dst
 	buf := new(strings.Builder)
 	createEdgeTemplate.Execute(buf, &createEdgeStruct{
 		Name:   edgeName,
-		Src:    withPolicyVid(wrapField(src), srcPolicy),
-		Dst:    withPolicyVid(wrapField(dst), dstPolicy),
+		Src:    src,
+		Dst:    dst,
 		Keys:   keysStr,
 		Values: ValuesStr,
 	})

@@ -1,18 +1,48 @@
 package norm
 
-import "github.com/zhihu/norm/constants"
+import (
+	"fmt"
 
-// 预定名词必须实现的属性
+	"github.com/zhihu/norm/constants"
+)
+
 type (
 	ITag interface {
 		TagName() string
 	}
 	IVertex interface {
-		// 返回点的名称
 		ITag
 		GetVid() interface{}
 		GetPolicy() constants.Policy
+		GetVidWithPolicy() string
 	}
+	// vid is int or string
+	VModel struct {
+		Vid    interface{}      `norm:"-"`
+		Policy constants.Policy `norm:"-"`
+	}
+)
+
+var _ IVertex = new(VModel)
+
+func (v VModel) TagName() string {
+	// TODO return model name with snake style
+	panic("")
+}
+
+func (v VModel) GetVid() interface{} {
+	return v.Vid
+}
+
+func (v VModel) GetPolicy() constants.Policy {
+	return v.Policy
+}
+
+func (v VModel) GetVidWithPolicy() string {
+	return GetVidWithPolicy(v.Vid, v.Policy)
+}
+
+type (
 	IEdge interface {
 		// 返回边的名称
 		EdgeName() string
@@ -20,14 +50,9 @@ type (
 		GetVidSrcPolicy() constants.Policy
 		GetVidDst() interface{}
 		GetVidDstPolicy() constants.Policy
-	}
-)
 
-type (
-	// Vid 是 int 或者 string 类型
-	VModel struct {
-		Vid    interface{}      `norm:"-"`
-		Policy constants.Policy `norm:"-"`
+		GetVidSrcWithPolicy() string
+		GetVidDstWithPolicy() string
 	}
 	EModel struct {
 		Src       interface{}      `norm:"-"`
@@ -37,13 +62,10 @@ type (
 	}
 )
 
-// GetVid 获取 vid
-func (v VModel) GetVid() interface{} {
-	return v.Vid
-}
+var _ IEdge = new(EModel)
 
-func (v VModel) GetPolicy() constants.Policy {
-	return v.Policy
+func (v EModel) EdgeName() string {
+	panic("")
 }
 
 func (v EModel) GetVidSrc() interface{} {
@@ -60,4 +82,29 @@ func (v EModel) GetVidDst() interface{} {
 
 func (v EModel) GetVidDstPolicy() constants.Policy {
 	return v.DstPolicy
+}
+
+func (e EModel) GetVidSrcWithPolicy() string {
+	return GetVidWithPolicy(e.GetVidSrc(), e.GetVidSrcPolicy())
+}
+
+func (e EModel) GetVidDstWithPolicy() string {
+	return GetVidWithPolicy(e.GetVidDst(), e.GetVidDstPolicy())
+}
+
+func GetVidWithPolicy(vid interface{}, policy constants.Policy) string {
+	vidStr := ""
+	switch vid := vid.(type) {
+	case int, int8, int32, int64, float32, float64:
+		vidStr = fmt.Sprint(vid)
+	case string:
+		vidStr = "'" + vid + "'"
+	default:
+		vidStr += "'" + fmt.Sprint(vid) + "'"
+	}
+	switch policy {
+	case constants.PolicyHash:
+		vidStr = "hash(" + vidStr + ")"
+	}
+	return vidStr
 }

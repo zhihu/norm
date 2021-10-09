@@ -2,12 +2,12 @@ package converts
 
 import (
 	"errors"
-	"fmt"
 	"reflect"
 	"strings"
 	"text/template"
 
 	"github.com/zhihu/norm/constants"
+	"github.com/zhihu/norm/internal/utils"
 )
 
 type createVertexStruct struct {
@@ -20,13 +20,12 @@ var createVertexTemplate = template.Must(template.New("insert_vertex").
 	Parse("insert vertex {{.Name}}({{.Keys}}) values {{.Vid}}:({{.Values}})"))
 
 // ConvertToCreateVertexSql 转换结构体为创建点的 sql
-func ConvertToCreateVertexSql(in interface{}, tagName string, vid interface{},
-	policy constants.Policy) (string, error) {
+func ConvertToCreateVertexSql(in interface{}, tagName string, vidWithPolicy string) (string, error) {
 	switch values := in.(type) {
 	case map[string]interface{}:
-		return buildCreateVertexSql(values, tagName, vid, policy), nil
+		return buildCreateVertexSql(values, tagName, vidWithPolicy), nil
 	case *map[string]interface{}:
-		return buildCreateVertexSql(*values, tagName, vid, policy), nil
+		return buildCreateVertexSql(*values, tagName, vidWithPolicy), nil
 	case []map[string]interface{}:
 		return "", errors.New("batch insert not support now")
 	case *[]map[string]interface{}:
@@ -36,24 +35,23 @@ func ConvertToCreateVertexSql(in interface{}, tagName string, vid interface{},
 		if err != nil {
 			return "", err
 		}
-		return buildCreateVertexSql(tagMap, tagName, vid, policy), nil
+		return buildCreateVertexSql(tagMap, tagName, vidWithPolicy), nil
 	}
 }
 
 func buildCreateVertexSql(tagMap map[string]interface{}, tagName string,
-	vid interface{}, policy constants.Policy) string {
+	vidWithPolicy string) string {
 	keys := make([]string, len(tagMap))
 	values := make([]string, len(tagMap))
 	i := 0
 	for k, v := range tagMap {
 		keys[i] = k
-		values[i] = wrapField(v)
+		values[i] = utils.WrapField(v)
 		i++
 	}
 	keysStr := strings.Join(keys, ",")
 	ValuesStr := strings.Join(values, ",")
 	buf := new(strings.Builder)
-	vidWithPolicy := withPolicyVid(wrapField(vid), policy)
 	createVertexTemplate.Execute(buf, &createVertexStruct{
 		Name:   tagName,
 		Vid:    vidWithPolicy,
@@ -61,16 +59,6 @@ func buildCreateVertexSql(tagMap map[string]interface{}, tagName string,
 		Values: ValuesStr,
 	})
 	return buf.String()
-}
-
-// wrapField wrap 字段, 使其符合 nebula 插入的习惯. 如给 string 添加引号
-func wrapField(in interface{}) string {
-	switch value := in.(type) {
-	case string:
-		return "'" + value + "'"
-	default:
-		return fmt.Sprint(value)
-	}
 }
 
 // parseStructToMap 解析传入的 struct, 取指定 Tag 为key, 生成 map.
