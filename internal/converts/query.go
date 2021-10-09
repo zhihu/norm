@@ -118,7 +118,7 @@ func toStructSlice(val reflect.Value, resultSet *dialectors.ResultSet) (err erro
 		}
 	}()
 
-	val.Set(reflect.MakeSlice(val.Type(), resultSet.GetColSize(), resultSet.GetColSize()))
+	val.Set(reflect.MakeSlice(val.Type(), resultSet.GetRowSize(), resultSet.GetRowSize()))
 	fieldTagMap := getStructFieldTagMap(val.Index(0).Type())
 	for i, row := range resultSet.GetRows() {
 		// 这里可以优化 GetColNames, 只循环两个共有的 key
