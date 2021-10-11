@@ -38,8 +38,9 @@ func (v VModel) GetPolicy() constants.Policy {
 	return v.Policy
 }
 
+// GetVidWithPolicy use GetVid instant vid, because we maybe rewrite GetVid() in child class
 func (v VModel) GetVidWithPolicy() string {
-	return GetVidWithPolicy(v.Vid, v.Policy)
+	return GetVidWithPolicy(v.GetVid(), v.GetPolicy())
 }
 
 type (
