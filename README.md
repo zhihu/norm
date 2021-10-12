@@ -42,7 +42,7 @@ Install:
 go get github.com/zhihu/norm
 ```
 
-use example: please go [use example](/examples/toddle/main.go)
+use example: please go [use example](/examples/main.go)
 
 ## Contributing guidelines
 
