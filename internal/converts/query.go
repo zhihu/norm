@@ -104,7 +104,7 @@ func toStructSlice(val reflect.Value, resultSet *dialectors.ResultSet) (err erro
 	if val.Interface() == nil {
 		return NilPointError
 	}
-	if resultSet.GetColSize() < 1 {
+	if resultSet.GetRowSize() < 1 {
 		return
 	}
 
