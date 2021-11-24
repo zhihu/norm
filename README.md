@@ -17,7 +17,6 @@ An ORM library support nGQL for Golang.
 **Roadmap**
 
 1. Session pool. For details, please see [dialector](/docs/dialector.adoc)
-    * Plan: before 2021/07/20
 2. Support more types in insert/execute function.
     * Types: time.Time
 3. Support batch insert, query list.
