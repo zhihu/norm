@@ -39,8 +39,20 @@ func ConvertToCreateVertexSql(in interface{}, tagName string, vidWithPolicy stri
 	}
 }
 
-func buildCreateVertexSql(tagMap map[string]interface{}, tagName string,
-	vidWithPolicy string) string {
+func buildCreateVertexSql(tagMap map[string]interface{}, tagName string, vidWithPolicy string) string {
+	keysStr, ValuesStr := genInsertKVs(tagMap)
+
+	buf := new(strings.Builder)
+	createVertexTemplate.Execute(buf, &createVertexStruct{
+		Name:   tagName,
+		Vid:    vidWithPolicy,
+		Keys:   keysStr,
+		Values: ValuesStr,
+	})
+	return buf.String()
+}
+
+func genInsertKVs(tagMap map[string]interface{}) (string, string) {
 	keys := make([]string, len(tagMap))
 	values := make([]string, len(tagMap))
 	i := 0
@@ -51,14 +63,7 @@ func buildCreateVertexSql(tagMap map[string]interface{}, tagName string,
 	}
 	keysStr := strings.Join(keys, ",")
 	ValuesStr := strings.Join(values, ",")
-	buf := new(strings.Builder)
-	createVertexTemplate.Execute(buf, &createVertexStruct{
-		Name:   tagName,
-		Vid:    vidWithPolicy,
-		Keys:   keysStr,
-		Values: ValuesStr,
-	})
-	return buf.String()
+	return keysStr, ValuesStr
 }
 
 // parseStructToMap 解析传入的 struct, 取指定 Tag 为key, 生成 map.

@@ -5,8 +5,6 @@ import (
 	"reflect"
 	"strings"
 	"text/template"
-
-	"github.com/zhihu/norm/internal/utils"
 )
 
 type createEdgeStruct struct {
@@ -39,16 +37,8 @@ func ConvertToCreateEdgeSql(in interface{}, edgeName string, src, dst string) (s
 }
 
 func buildCreateEdgeSql(tagMap map[string]interface{}, edgeName string, src, dst string) string {
-	keys := make([]string, len(tagMap))
-	values := make([]string, len(tagMap))
-	i := 0
-	for k, v := range tagMap {
-		keys[i] = k
-		values[i] = utils.WrapField(v)
-		i++
-	}
-	keysStr := strings.Join(keys, ",")
-	ValuesStr := strings.Join(values, ",")
+	keysStr, ValuesStr := genInsertKVs(tagMap)
+
 	buf := new(strings.Builder)
 	createEdgeTemplate.Execute(buf, &createEdgeStruct{
 		Name:   edgeName,
