@@ -31,11 +31,34 @@ func (db *DB) InsertVertex(in IVertex) error {
 	return err
 }
 
+// UpsertVertex 解析结构体, 然后 Upsert 一个点.
+func (db *DB) UpsertVertex(in IVertex) error {
+	vidWithPolicy := GetVidWithPolicy(in.GetVid(), in.GetPolicy())
+	sql, err := converts.ConvertToUpsertVertexSql(in, in.TagName(), vidWithPolicy)
+	if err != nil {
+		return err
+	}
+	_, err = db.execute(sql)
+	return err
+}
+
 // InsertEdge 解析结构体, 然后插入一条边.
 func (db *DB) InsertEdge(in IEdge) error {
 	vidSrcWithPolicy := GetVidWithPolicy(in.GetVidSrc(), in.GetVidSrcPolicy())
 	vidDstWithPolicy := GetVidWithPolicy(in.GetVidDst(), in.GetVidDstPolicy())
 	sql, err := converts.ConvertToCreateEdgeSql(in, in.EdgeName(), vidSrcWithPolicy, vidDstWithPolicy)
+	if err != nil {
+		return err
+	}
+	_, err = db.execute(sql)
+	return err
+}
+
+// UpsertEdge 解析结构体, 然后插入 Upsert 一条边.
+func (db *DB) UpsertEdge(in IEdge) error {
+	vidSrcWithPolicy := GetVidWithPolicy(in.GetVidSrc(), in.GetVidSrcPolicy())
+	vidDstWithPolicy := GetVidWithPolicy(in.GetVidDst(), in.GetVidDstPolicy())
+	sql, err := converts.ConvertToUpsertEdgeSql(in, in.EdgeName(), vidSrcWithPolicy, vidDstWithPolicy)
 	if err != nil {
 		return err
 	}
