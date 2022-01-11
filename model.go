@@ -14,7 +14,6 @@ type (
 		ITag
 		GetVid() interface{}
 		GetPolicy() constants.Policy
-		GetVidWithPolicy() string
 	}
 	// vid is int or string
 	VModel struct {
@@ -38,11 +37,6 @@ func (v VModel) GetPolicy() constants.Policy {
 	return v.Policy
 }
 
-// GetVidWithPolicy use GetVid instant vid, because we maybe rewrite GetVid() in child class
-func (v VModel) GetVidWithPolicy() string {
-	return GetVidWithPolicy(v.GetVid(), v.GetPolicy())
-}
-
 type (
 	IEdge interface {
 		// 返回边的名称
@@ -51,9 +45,6 @@ type (
 		GetVidSrcPolicy() constants.Policy
 		GetVidDst() interface{}
 		GetVidDstPolicy() constants.Policy
-
-		GetVidSrcWithPolicy() string
-		GetVidDstWithPolicy() string
 	}
 	EModel struct {
 		Src       interface{}      `norm:"-"`
@@ -83,14 +74,6 @@ func (v EModel) GetVidDst() interface{} {
 
 func (v EModel) GetVidDstPolicy() constants.Policy {
 	return v.DstPolicy
-}
-
-func (e EModel) GetVidSrcWithPolicy() string {
-	return GetVidWithPolicy(e.GetVidSrc(), e.GetVidSrcPolicy())
-}
-
-func (e EModel) GetVidDstWithPolicy() string {
-	return GetVidWithPolicy(e.GetVidDst(), e.GetVidDstPolicy())
 }
 
 func GetVidWithPolicy(vid interface{}, policy constants.Policy) string {
