@@ -29,7 +29,7 @@ func (db *DB) From(vs ...IVertex) (tx *DB) {
 
 	vids := make([]string, len(vs))
 	for i, v := range vs {
-		vids[i] = v.GetVidWithPolicy()
+		vids[i] = GetVidWithPolicy(v.GetVid(), v.GetPolicy())
 	}
 
 	if tx.sql == "" {
