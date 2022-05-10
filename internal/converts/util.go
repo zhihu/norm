@@ -12,7 +12,7 @@ func getStructFieldTagMap(typ reflect.Type) map[string]int {
 	tagMap := make(map[string]int)
 	for i := 0; i < typ.NumField(); i++ {
 		tag := typ.Field(i).Tag.Get(constants.StructTagName)
-		if tag == "" {
+		if tag == "" || tag == "-" {
 			continue
 		}
 		tagMap[tag] = i
