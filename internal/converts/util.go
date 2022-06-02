@@ -31,7 +31,16 @@ func setFieldValue(tag string, field reflect.Value, nValue *nebula_type.Value) e
 		field.SetFloat(nValue.GetFVal())
 	case reflect.String:
 		field.SetString(string(nValue.GetSVal()))
+	case reflect.Struct:
+	switch field.Type().String() {
+		case "time.Time":
+			ts := nValue.GetIVal()
+			field.Set(reflect.ValueOf(time.Unix(ts, 0)))
+		default:
+			//fmt.Printf("debug: type[%v] mapping not implement\n", field.Type().String())
+		}
 	default:
+		//fmt.Printf("debug: type[%v] mapping not implement\n", field.Type().String())
 		return nil
 	}
 	return nil
