@@ -2,6 +2,7 @@ package converts
 
 import (
 	"reflect"
+	"time"
 
 	nebula_type "github.com/vesoft-inc/nebula-go/v2/nebula"
 	"github.com/zhihu/norm/constants"
@@ -32,7 +33,7 @@ func setFieldValue(tag string, field reflect.Value, nValue *nebula_type.Value) e
 	case reflect.String:
 		field.SetString(string(nValue.GetSVal()))
 	case reflect.Struct:
-	switch field.Type().String() {
+		switch field.Type().String() {
 		case "time.Time":
 			ts := nValue.GetIVal()
 			field.Set(reflect.ValueOf(time.Unix(ts, 0)))
