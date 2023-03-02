@@ -1,7 +1,7 @@
 package norm
 
 import (
-	nebula "github.com/vesoft-inc/nebula-go/v2"
+	nebula "github.com/vesoft-inc/nebula-go/v3"
 )
 
 type Logger = nebula.Logger
