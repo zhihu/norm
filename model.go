@@ -45,12 +45,14 @@ type (
 		GetVidSrcPolicy() constants.Policy
 		GetVidDst() interface{}
 		GetVidDstPolicy() constants.Policy
+		GetRank() int
 	}
 	EModel struct {
 		Src       interface{}      `norm:"-"`
 		SrcPolicy constants.Policy `norm:"-"`
 		Dst       interface{}      `norm:"-"`
 		DstPolicy constants.Policy `norm:"-"`
+		Rank      int
 	}
 )
 
@@ -74,6 +76,10 @@ func (v EModel) GetVidDst() interface{} {
 
 func (v EModel) GetVidDstPolicy() constants.Policy {
 	return v.DstPolicy
+}
+
+func (v EModel) GetRank() int {
+	return v.Rank
 }
 
 func GetVidWithPolicy(vid interface{}, policy constants.Policy) string {

@@ -46,7 +46,7 @@ func (db *DB) UpsertVertex(in IVertex) error {
 func (db *DB) InsertEdge(in IEdge) error {
 	vidSrcWithPolicy := GetVidWithPolicy(in.GetVidSrc(), in.GetVidSrcPolicy())
 	vidDstWithPolicy := GetVidWithPolicy(in.GetVidDst(), in.GetVidDstPolicy())
-	sql, err := converts.ConvertToCreateEdgeSql(in, in.EdgeName(), vidSrcWithPolicy, vidDstWithPolicy)
+	sql, err := converts.ConvertToCreateEdgeSql(in, in.EdgeName(), vidSrcWithPolicy, vidDstWithPolicy, in.GetRank())
 	if err != nil {
 		return err
 	}
