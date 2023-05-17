@@ -5,7 +5,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/zhihu/norm"
+	"github.com/zhihu/norm/v3"
 )
 
 // 使用 chainable 必须保证函数调用顺序, 因为逻辑上是有序的.

@@ -4,7 +4,7 @@ import (
 	"reflect"
 
 	"github.com/pkg/errors"
-	"github.com/zhihu/norm/dialectors"
+	"github.com/zhihu/norm/v3/dialectors"
 )
 
 var (

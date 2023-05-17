@@ -3,7 +3,7 @@ package models
 import (
 	"fmt"
 
-	"github.com/zhihu/norm"
+	"github.com/zhihu/norm/v3"
 )
 
 type (

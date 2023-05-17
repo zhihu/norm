@@ -4,9 +4,9 @@ import (
 	"log"
 	"time"
 
-	"github.com/zhihu/norm"
-	"github.com/zhihu/norm/dialectors"
-	"github.com/zhihu/norm/examples/querys"
+	"github.com/zhihu/norm/v3"
+	"github.com/zhihu/norm/v3/dialectors"
+	"github.com/zhihu/norm/v3/examples/querys"
 )
 
 func main() {

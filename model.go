@@ -3,7 +3,7 @@ package norm
 import (
 	"fmt"
 
-	"github.com/zhihu/norm/constants"
+	"github.com/zhihu/norm/v3/constants"
 )
 
 type (

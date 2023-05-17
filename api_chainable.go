@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/zhihu/norm/constants"
+	"github.com/zhihu/norm/v3/constants"
 )
 
 // Debug will print the nGql when it exec
