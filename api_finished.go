@@ -1,8 +1,8 @@
 package norm
 
 import (
-	"github.com/zhihu/norm/dialectors"
-	"github.com/zhihu/norm/internal/converts"
+	"github.com/zhihu/norm/v3/dialectors"
+	"github.com/zhihu/norm/v3/internal/converts"
 )
 
 // Execute 执行某条sql

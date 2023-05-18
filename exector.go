@@ -1,7 +1,7 @@
 package norm
 
 import (
-	"github.com/zhihu/norm/dialectors"
+	"github.com/zhihu/norm/v3/dialectors"
 )
 
 // execute 真正执行一个 sql

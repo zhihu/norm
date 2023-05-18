@@ -5,7 +5,7 @@ import (
 	"time"
 
 	nebula_type "github.com/vesoft-inc/nebula-go/v3/nebula"
-	"github.com/zhihu/norm/constants"
+	"github.com/zhihu/norm/v3/constants"
 )
 
 // getStructFieldTagMap 将 struct 中标记为 norm 的 tag 提取出来, 并记录 field 的位置

@@ -3,9 +3,9 @@ package querys
 import (
 	"time"
 
-	"github.com/zhihu/norm"
-	"github.com/zhihu/norm/constants"
-	"github.com/zhihu/norm/examples/models"
+	"github.com/zhihu/norm/v3"
+	"github.com/zhihu/norm/v3/constants"
+	"github.com/zhihu/norm/v3/examples/models"
 )
 
 var (

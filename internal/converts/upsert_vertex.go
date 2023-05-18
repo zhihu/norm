@@ -6,7 +6,7 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/zhihu/norm/internal/utils"
+	"github.com/zhihu/norm/v3/internal/utils"
 )
 
 type upsertVertexStruct struct {

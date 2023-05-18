@@ -3,7 +3,7 @@ package querys
 import (
 	"log"
 
-	"github.com/zhihu/norm"
+	"github.com/zhihu/norm/v3"
 )
 
 func Count(db *norm.DB) {

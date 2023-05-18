@@ -6,8 +6,8 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/zhihu/norm/constants"
-	"github.com/zhihu/norm/internal/utils"
+	"github.com/zhihu/norm/v3/constants"
+	"github.com/zhihu/norm/v3/internal/utils"
 )
 
 type createVertexStruct struct {

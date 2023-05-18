@@ -3,8 +3,8 @@ package querys
 import (
 	"log"
 
-	"github.com/zhihu/norm"
-	"github.com/zhihu/norm/examples/models"
+	"github.com/zhihu/norm/v3"
+	"github.com/zhihu/norm/v3/examples/models"
 )
 
 func MatchSingle(db *norm.DB) {
